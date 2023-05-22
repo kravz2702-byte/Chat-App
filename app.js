@@ -46,7 +46,11 @@ const sendMessage = (e) => {
         timestamp
     }
 
+    localStorage.setItem('message', JSON.stringify(message))
     chatMessages.innerHTML += createChatMessageElement(message)
+
+    chatInputForm.reset()
+    chatMessages.scrollTop = chatMessages.scrollHeight
 }
 
 chatInputForm.addEventListener('submit', sendMessage)
