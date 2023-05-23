@@ -6,6 +6,8 @@ const chatInput = document.querySelector('.chat-input')
 const chatInputForm = document.querySelector('.chat-input-form')
 const clearChatButton = document.querySelector('.clear-chat-button')
 
+const messages = JSON.parse(localStorage.getItem('messages')) || []
+
 const createChatMessageElement = (message) => `
 <div class="message ${message.sender === 'John' ? 'blue-bg' : 'gray-bg'}">
     <div class="message-sender">${message.sender}</div>
@@ -13,6 +15,13 @@ const createChatMessageElement = (message) => `
     <div class="message-timestamp">${message.timestamp}</div>
 </div>    
 `
+
+window.onload = () => {
+    messages.forEach((message) => {
+        chatMessages.innerHTML += createChatMessageElement(message)
+    })
+}
+
 let messageSender = 'John'
 
 const updateMessageSender = (name) => {
@@ -46,8 +55,9 @@ const sendMessage = (e) => {
         timestamp
     }
 
-    localStorage.setItem('message', JSON.stringify(message))
-    chatMessages.innerHTML += createChatMessageElement(message)
+    messages.push(message)
+    localStorage.setItem('messages', JSON.stringify(messages))
+    chatMessages.innerHTML += createChatMessageElement(messages)
 
     chatInputForm.reset()
     chatMessages.scrollTop = chatMessages.scrollHeight
@@ -55,3 +65,7 @@ const sendMessage = (e) => {
 
 chatInputForm.addEventListener('submit', sendMessage)
 
+clearChatButton.addEventListener('click', ()=>{
+    localStorage.clear
+    chatMessages.innerHTML = ''
+})
